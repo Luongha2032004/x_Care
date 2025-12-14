@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Doctor Upload</title>
+</head>
+<body>
+    <h2>Add Doctor Form</h2>
+    <form action="http://localhost:4000/api/admin/add-doctor" method="POST" enctype="multipart/form-data">
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name" required>
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" required>
+        </div>
+        <div>
+            <label>Password:</label>
+            <input type="password" name="password" required>
+        </div>
+        <div>
+            <label>Speciality:</label>
+            <input type="text" name="speciality" required>
+        </div>
+        <div>
+            <label>Degree:</label>
+            <input type="text" name="degree" required>
+        </div>
+        <div>
+            <label>Experience:</label>
+            <input type="text" name="experience" required>
+        </div>
+        <div>
+            <label>About:</label>
+            <textarea name="about" required></textarea>
+        </div>
+        <div>
+            <label>Fees:</label>
+            <input type="number" name="fees" required>
+        </div>
+        <div>
+            <label>Address Line 1:</label>
+            <input type="text" name="address[line1]" required>
+        </div>
+        <div>
+            <label>Image:</label>
+            <input type="file" name="image" accept="image/*" required>
+        </div>
+        <button type="submit">Add Doctor</button>
+    </form>
+</body>
+</html> 

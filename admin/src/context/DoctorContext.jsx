@@ -77,7 +77,8 @@ const DoctorContextProvider = ({ children }) => {
 
     // DoctorContext.js
 
-    const requestScheduleUpdate = async (newSchedule) => {
+    // Cho phép truyền setError để hiển thị lỗi chi tiết ở UI
+    const requestScheduleUpdate = async (newSchedule, setError) => {
         try {
             const { data } = await axios.post(
                 `${backendUrl}/api/doctor/schedule-request`,
@@ -89,11 +90,13 @@ const DoctorContextProvider = ({ children }) => {
                 toast.success(data.message || "Gửi yêu cầu thành công");
                 getDoctorProfile(); // cập nhật lại context
             } else {
+                if (setError) setError(data.message || "Không gửi được yêu cầu");
                 toast.error(data.message || "Không gửi được yêu cầu");
             }
         } catch (error) {
             console.error(error);
-            toast.error("Lỗi khi gửi yêu cầu");
+            if (setError) setError(error.response?.data?.message || error.message || "Lỗi khi gửi yêu cầu");
+            toast.error(error.response?.data?.message || error.message || "Lỗi khi gửi yêu cầu");
         }
     };
 

@@ -13,6 +13,27 @@ const AllAppointments = () => {
         }
     }, [aToken])
 
+    // Hàm xóa cuộc hẹn (gọi API backend)
+    const handleDeleteAppointment = async (appointmentId) => {
+        if (!window.confirm('Bạn có chắc muốn xóa cuộc hẹn này?')) return;
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/admin/appointments/${appointmentId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${aToken}`,
+                },
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Đã xóa cuộc hẹn thành công!');
+                getAllAppointments();
+            } else {
+                alert(data.message || 'Xóa thất bại!');
+            }
+        } catch (err) {
+            alert('Lỗi khi xóa cuộc hẹn!');
+        }
+    }
     return (
         <div className='w-full max-w-6xl mx-auto mt-5 px-4'>
             <p className='mb-4 text-xl font-semibold text-gray-800'>Tất cả cuộc hẹn</p>
@@ -20,13 +41,14 @@ const AllAppointments = () => {
             <div className='bg-white border rounded-xl shadow-md text-sm overflow-hidden'>
 
                 {/* Header cố định */}
-                <div className='grid grid-cols-[0.5fr_2.5fr_1fr_3fr_3fr_1fr] items-center py-3 px-6 border-b bg-gray-100 text-gray-700 font-medium sticky top-0 z-10'>
+                <div className='grid grid-cols-[0.5fr_2.5fr_1fr_3fr_3fr_1fr_0.7fr] items-center py-3 px-6 border-b bg-gray-100 text-gray-700 font-medium sticky top-0 z-10'>
                     <p>#</p>
                     <p>Bệnh nhân</p>
                     <p>Tuổi</p>
                     <p>Ngày & Giờ</p>
                     <p>Bác sĩ</p>
                     <p>Trạng thái</p>
+                    <p>Xóa</p>
                 </div>
 
                 {/* Danh sách có scroll riêng */}
@@ -34,7 +56,7 @@ const AllAppointments = () => {
                     {appointments.filter(item => item.userData && item.docData).map((item, index) => (
                         <div
                             key={index}
-                            className='grid grid-cols-[0.5fr_2.5fr_1fr_3fr_3fr_1fr] items-center py-4 px-6 border-b text-gray-700 hover:bg-gray-50 transition-all duration-150'
+                            className='grid grid-cols-[0.5fr_2.5fr_1fr_3fr_3fr_1fr_0.7fr] items-center py-4 px-6 border-b text-gray-700 hover:bg-gray-50 transition-all duration-150'
                         >
                             <p>{index + 1}</p>
                             <div className='flex items-center gap-2'>
@@ -73,6 +95,15 @@ const AllAppointments = () => {
                                     alt="Hủy cuộc hẹn"
                                 />
                             )}
+                            {/* Nút xóa cuộc hẹn */}
+                            <button
+                                className='bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold transition-colors duration-150'
+                                onClick={() => handleDeleteAppointment(item._id)}
+                                // luôn cho phép xóa, kể cả đã hủy hoặc đã xác nhận
+                            >
+                                Xóa
+                            </button>
+
                         </div>
                     ))}
                 </div>

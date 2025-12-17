@@ -1,8 +1,10 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+
 export const AdminContext = createContext();
+export const useAdminContext = () => useContext(AdminContext);
 
 const AdminContextProvider = (props) => {
     const [aToken, setAToken] = useState(localStorage.getItem('aToken') || '');

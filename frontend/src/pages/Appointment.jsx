@@ -81,15 +81,29 @@ const Appointment = () => {
             const daySlots = [];
 
             timeList.forEach(timeStr => {
-                const [hour, minute] = timeStr.split(":").map(Number);
-                const slotDateTime = new Date(current);
-                slotDateTime.setHours(hour, minute, 0, 0);
+                if (typeof timeStr === "string") {
+                    const [hour, minute] = timeStr.split(":").map(Number);
+                    const slotDateTime = new Date(current);
+                    slotDateTime.setHours(hour, minute, 0, 0);
 
-                const slotDate = `${slotDateTime.getDate()}_${slotDateTime.getMonth() + 1}_${slotDateTime.getFullYear()}`;
-                const isAvailable = !(docInfo.slots_booked?.[slotDate]?.includes(timeStr));
+                    const slotDate = `${slotDateTime.getDate()}_${slotDateTime.getMonth() + 1}_${slotDateTime.getFullYear()}`;
+                    const isAvailable = !(docInfo.slots_booked?.[slotDate]?.includes(timeStr));
 
-                if (isAvailable) {
-                    daySlots.push({ datetime: slotDateTime, time: timeStr });
+                    if (isAvailable) {
+                        daySlots.push({ datetime: slotDateTime, time: timeStr });
+                    }
+                } else if (timeStr && typeof timeStr === "object" && timeStr.time) {
+                    // Nếu dữ liệu là object có thuộc tính time (phòng trường hợp backend trả về object)
+                    const [hour, minute] = String(timeStr.time).split(":").map(Number);
+                    const slotDateTime = new Date(current);
+                    slotDateTime.setHours(hour, minute, 0, 0);
+                    const slotDate = `${slotDateTime.getDate()}_${slotDateTime.getMonth() + 1}_${slotDateTime.getFullYear()}`;
+                    const isAvailable = !(docInfo.slots_booked?.[slotDate]?.includes(timeStr.time));
+                    if (isAvailable) {
+                        daySlots.push({ datetime: slotDateTime, time: timeStr.time });
+                    }
+                } else {
+                    console.warn("timeStr không phải là string hoặc object hợp lệ:", timeStr);
                 }
             });
 
@@ -106,6 +120,10 @@ const Appointment = () => {
         }
 
         try {
+            if (!docSlots[slotIndex] || docSlots[slotIndex].length === 0) {
+                toast.error('Không có khung giờ khả dụng!');
+                return;
+            }
             const date = docSlots[slotIndex][0].datetime;
             const slotDate = `${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}`;
 

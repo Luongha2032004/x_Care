@@ -22,6 +22,11 @@ import CreateDiagnosis from './pages/Doctor/CreateDiagnosis';
 import DiagnosisDetail from './pages/Doctor/DiagnosisDetail';
 import RecordMedical from './pages/Admin/RecordMedical';
 import RecordDetail from './pages/Admin/RecordDetail';
+// import ScheduleRequests from './pages/Admin/DoctorScheduleRequests';
+import DoctorScheduleRequests from './pages/Admin/DoctorScheduleRequests';
+import WorkSchedule from './pages/Admin/WorkSchedule';
+// import adminRouter  from '../../backend/routes/adminRoute';
+
 
 const App = () => {
 
@@ -43,11 +48,12 @@ const App = () => {
           <Route path='/add-doctor' element={<AddDoctor />} />
           <Route path='/doctor-list' element={<DoctorList />} />
           <Route path='/doctors-detail/:id' element={<DoctorDetail/>} />
-
+          <Route path='/admin/schedule-requests' element={<DoctorScheduleRequests/>} />
           <Route path='/users' element={<UserList/>} />
           <Route path='/users-detail/:id' element={<UserDetail/>} />
           <Route path='/record-medical' element={<RecordMedical />} />
           <Route path='/record-detail/:appointmentId' element={<RecordDetail />} />
+          <Route path='/work-schedule' element={<WorkSchedule />} />
 
 
           {/* { DOCTOR ROUTE } */}

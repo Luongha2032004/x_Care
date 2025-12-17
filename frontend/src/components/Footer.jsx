@@ -30,8 +30,8 @@ const Footer = () => {
                 <div>
                     <h3 className='text-lg font-semibold mb-4'>Get in Touch</h3>
                     <ul className='space-y-2 text-sm'>
-                        <li><span className='font-medium'>Phone:</span> +84-843-305-125</li>
-                        <li><span className='font-medium'>Email:</span> 13dvhung@gmail.com</li>
+                        <li><span className='font-medium'>Phone:</span> +84-865-887-574</li>
+                        <li><span className='font-medium'>Email:</span> 22T1020591@husc.edu.vn</li>
                     </ul>
                 </div>
             </div>

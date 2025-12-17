@@ -235,20 +235,21 @@ const requestWorkingSchedule = async (req, res) => {
             '16:00', '17:00',
         ];
 
-        // Validate ngày và giờ
-        for (const [dateStr, times] of Object.entries(workingScheduleRequest)) {
+        // Validate ngày, giờ và phòng
+        for (const [dateStr, slots] of Object.entries(workingScheduleRequest)) {
             const date = new Date(dateStr);
-
             if (isNaN(date.getTime())) {
                 return res.status(400).json({ success: false, message: `Invalid date format: ${dateStr}` });
             }
             if (date < today || date > maxDate) {
                 return res.status(400).json({ success: false, message: `Date ${dateStr} is out of allowed range (15 days)` });
             }
-
-            for (const time of times) {
-                if (!allowedTimes.includes(time)) {
-                    return res.status(400).json({ success: false, message: `Invalid time slot: ${time} on ${dateStr}` });
+            for (const slot of slots) {
+                if (!slot.time || !allowedTimes.includes(slot.time)) {
+                    return res.status(400).json({ success: false, message: `Invalid time slot: ${JSON.stringify(slot)} on ${dateStr}` });
+                }
+                if (!slot.room || ![1,2,3].includes(slot.room)) {
+                    return res.status(400).json({ success: false, message: `Invalid room: ${JSON.stringify(slot)} on ${dateStr}` });
                 }
             }
         }

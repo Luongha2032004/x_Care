@@ -197,31 +197,37 @@ const confirmPayment = async (req, res) => {
     }
 };
 
-// Admin duyệt lịch làm việc
-const approveWorkingSchedule = async (req, res) => {
+export const getScheduleRequests = async (req, res) => {
     try {
-        const { doctorId } = req.body;
+        const requests = await doctorModel.find({
+            workingScheduleRequest: { $exists: true, $ne: {} }
+        }).select("name email workingScheduleRequest");
 
-        const doctor = await doctorModel.findById(doctorId);
-        if (!doctor) {
-            return res.status(404).json({ success: false, message: 'Doctor not found' });
-        }
-
-        if (!doctor.workingScheduleRequest || Object.keys(doctor.workingScheduleRequest).length === 0) {
-            return res.status(400).json({ success: false, message: 'No schedule request to approve' });
-        }
-
-        // Duyệt lịch làm việc mới
-        doctor.workingSchedule = doctor.workingScheduleRequest;
-        doctor.workingScheduleRequest = {}; // Xóa yêu cầu sau khi duyệt
-        await doctor.save();
-
-        res.json({ success: true, message: 'Schedule approved successfully' });
+        res.json({ success: true, requests });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+export const approveWorkingSchedule = async (req, res) => {
+    try {
+        const { doctorId } = req.params;
+
+        const doctor = await doctorModel.findById(doctorId);
+        if (!doctor) {
+            return res.status(404).json({ success: false, message: "Doctor not found" });
+        }
+
+        doctor.workingSchedule = doctor.workingScheduleRequest;
+        doctor.workingScheduleRequest = {};
+        await doctor.save();
+
+        res.json({ success: true, message: "Approved" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 
 // API to get detaildoctor
 const getDoctorDetails = async (req, res) => {
@@ -463,7 +469,6 @@ export {
     appointmentCancel,
     adminDashboard,
     confirmPayment,
-    approveWorkingSchedule,
     getDoctorDetails,
     deleteDoctor,
     updateDoctor,
@@ -472,5 +477,6 @@ export {
     updateUser,
     deleteUser,
     getDiagnosedRecords,
-    getDiagnosisByAppointment
+    getDiagnosisByAppointment,
 }
+        // approveWorkingSchedule, // Removed duplicate export
